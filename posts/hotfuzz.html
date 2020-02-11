@@ -1,0 +1,301 @@
+<html>
+<head>
+    <title>HotFuzz: Discovering Algorithmic Denial-of-Service Vulnerabilities through Guided Micro-Fuzzing</title>
+    <link rel="stylesheet" href="/static/stylesheet.css" type="text/css" charset="utf-8" />
+
+    <style type="text/css">
+        body {
+            font-family: 'libertinus_serifregular';
+        }
+
+        p {
+            max-width: 70em;
+        }
+
+        .code {
+            font-family: "Courier New";
+            font-size: 0.8em;
+        }
+
+        .figure {
+            margin-left: 10em;
+        }
+
+        .center {
+            margin-left: 20em;
+        }
+
+    </style>
+</head>
+
+<body>
+<h1>HotFuzz: Discovering Algorithmic Denial-of-Service Vulnerabilities through Guided Micro-Fuzzing</h1>
+<h2>William Blair, Andrea Mambretti, Sajjad Arshad, Michael Weissbacher, William Robertson, Engin Kirda, Manuel Egele</h2>
+<h3>Feb 12, 2020</h3>
+<article>
+<a href="/papers/hotfuzz.pdf">[paper]</a>
+<a href="/static/HotFuzz.pptx">[slides]</a>
+
+<h2>Overview</h2>
+<p>In this post, we introduce HotFuzz, a system that implements micro-fuzzing
+for the purpose of detecting Algorithmic Complexity (AC) vulnerabilities in Java
+programs and libraries. We give a high level overview of the system, introduce
+some of the results we obtained from our evaluation, and provide more in-depth
+case studies of our results than we were able to provide in our paper.</p>
+
+<h2>Introduction</h2>
+<p>Fuzz Testing is a simple technique to detect bugs in programs and has
+historically uncovered serious security vulnerabilities in widely used
+software. Application developers normally compile their programs with special
+instrumentation and pass them off to state of the art fuzzers, such as AFL or
+libFuzzer, which automatically executes them indefinitely until the program
+exhibits problematic behavior, such as writing past the boundary of a buffer,
+and crashes the program. This offline testing is easy to perform, and the fact
+that it is fully automated makes it an attractive way to detect bugs in
+parallel with the software development lifecycle.<p>
+
+<p>At the same time, state of the art fuzzers primarily focus on finding memory
+corruption bugs that, if exploited,  could have serious security consequences.
+For example, adversaries could take inputs that crash a given program and
+extend them into exploits that hijack the program.  Second, fuzzers typically
+only provide flat bitmaps as input to a program under test, and if users want
+to fuzz individual methods in a program, they must manually define a test
+harness that transforms this bitmap into the individual inputs needed for a
+given method.</p>
+
+<p>In this work, we propose micro-fuzzing as a technique that automatically
+generates this test harness for arbitrary methods, and utilizes a genetic
+algorithm that evolves arbitrary Java objects in order to maximize the resource
+consumption for a specific method under test. We propose a sanitizer for
+detecting AC vulnerabilities that is analagous to existing sanitizers that
+cause a program to crash immediately when memory integrity violations occur,
+such as when a program writes past the boundary of a buffer. This AC sanitizer
+provides the signal to HotFuzz that an input triggers an AC vulnerability in a
+method. In HotFuzz, we use the combination of micro-fuzzing to automatically
+execute arbitrary Java methods, without the need to construct test harnesses,
+and sanitize method executions to detect potential AC vulnerabilities in Java
+libraries. The result of running HotFuzz on a given library are a corpus of
+test cases that demonstrate potential AC vulnerabilities in a Java library
+which adversaries could utilize to achieve Denial of Service in victim
+programs. Our goal in performing this offline testing is to discover these bugs
+so that developers can patch them before adversaries have the chance to exploit
+them.</p>
+
+<h2>System Description</h2>
+
+<p>
+The following diagram shows how HotFuzz works end to end on a given Java
+library.  First, every method contained in the library is submitted to a
+distributed set of microFuzz instances running on a Kubernetes Cluster.
+Upon receiving a method under test, microFuzz examines the type signature
+of the method and automatically attempts to create valid instances of the
+types needed to invoke the method. These instances form the seed inputs for
+micro-fuzzing, and in the paper we propose a novel seed selection strategy
+called Small Recursive Instantiation (SRI) and evaluate its performance, measured
+by the number of AC bugs it detects, to the simplest possible strategy, called
+(IVI). The details of both approaches can be found in the
+<a href="/papers/hotfuzz.pdf">paper</a>.</p>
+
+<p>After a set of seed inputs are generated, HotFuzz uses a genetic algorithm
+to search for  inputs that maximize the resource consumption for a given
+method. A genetic algorithm evolves a population of inputs in a process that
+mimics natural selection. Over a period of generations the most fit inputs
+carry produce offspring, and less fit inputs die off. In HotFuzz, the fitness
+of a given individual is measured by the execution time of the method when invoked
+on the input. Fuzzers typically produce new offspring by applying standard
+crossover and mutation operators to flat bitmaps, which do not readily apply
+to instances of arbitrary Java types. For this reason, we propose new techniques
+for crossing over and mutating arbitrary Java objects in order to produce new
+offspring in HotFuzz's genetic algorithm. The combination of generating test
+harnesses automatically, and evolving instances of complex types is the core
+of micro-fuzzing outlined in the <a href="/papers/hotfuzz.html">paper</a>.</p>
+
+<p>After micro-fuzzing completes for a given library, we save all the results
+into a database for the witness validation stage of HotFuzz. During micro-fuzzing,
+HotFuzz may observe a test case triggers an AC vulnerability in a method, but
+this may be the result of a benign method polling on a socket or a file, or
+simply sleeping. To eliminate these false positives from our results, we synthesize
+test cases into Java programs, and monitor their execution outside the fuzzing framework
+in a production Java environment with JIT enabled.</p>
+
+<img src="/static/hotfuzz-system.svg">
+
+<h2>Results</h2>
+<p>The primary goal of our evaluation was to understand whether micro-fuzzing
+is effective at detecting AC vulnerabilities in Java libraries, and to measure
+the efficiency of SRI as a seed selection strategy. To do so, we evaluated HotFuzz
+over the entire Java Runtime Environment (JRE), all challenges contained in the
+DARPA Space and Time Analysis for Cybersecurity (STAC) program, and the top
+100 most popular libraries contained in Maven. Micro-fuzzing production code
+helps us understand whether the technique can detect real bugs, but to measure
+SRIs effectiveness we propose Initial Value Instantiation (IVI) as a baseline
+that starts micro-fuzzing with empty inputs.</p>
+
+<p>In the following graphs, you can see the performance of each seed selection
+strategy over time. Each plot shows the cumulative number of AC bugs detected
+as HotFuzz micro-fuzzes all the methods contained in a given library. Observe
+that for every artifact we consider, SRI outperforms the baseline strategy
+IVI.</p>
+
+<div>
+<img src="/static/hot-fuzz-performance-jre.svg"> <img src="/static/hot-fuzz-performance-darpa-stac-challenges.svg">
+</div>
+<div class="center">
+<img src="/static/hot-fuzz-performance-100-most-popular-maven-libraries.svg">
+</div>
+
+A complete breakdown of our evaluation results, including bugs detected, methods covered, micro-fuzzing throughput, and selected case studies can be found in our <a href="/papers/hotfuzz.pdf">paper</a>.
+</p>
+<h2>Slow Arithmetic in the Java Runtime Environment</h2>
+
+<p>Consider the following Java program.</p>
+<pre>
+    import java.math.BigDecimal;
+
+    class BigDecimalPoC {
+      public static void main(String args[]) {
+        BigDecimal x = new BigDecimal("1e2147483647");
+        BigDecimal y = x.add(new BigDecimal(1));
+      }
+    }
+</pre>
+
+<p>Over the course of our evaluation we found that this simple program was able
+to dramatically slow down the <span class="code">BigDecimal.add</span> method across three
+different implementations of the Java Virtual Machine (JVM). We present the root
+cause of this issue in our paper, but intuitively the issue lies in an
+intermediate variable created by <span class="code">BigDecimal.add</span> that it uses to sum
+two numbers in scientific notation with different exponents. In this example,
+we force this intermediate value to be as large as possible, and force
+<span class="code">BigDecimal.add</span> to compute the value "1e2147483647" directly as a
+<span class="code">BigInteger</span>, Java's class for arbitrary precision integers.  We
+observed that this can take anywhere to an hour on the OpenJDK to over four
+months on IBM's J9 JVM. In this section, we detail the behavior we observed in
+each implementation of the JVM including the OpenJDK, IBM J9, and Android
+ART.</p>
+
+<h3>OpenJDK</h3>
+
+<p>
+Running the PoC on OpenJDK 8 ends in an exception, but 53 minutes after the
+start of the execution. As described in the paper, recent builds of the OpenJDK
+immediately throw the exception, which still allows an adversary to affect the
+availibility of a victim program, but to a lesser extant then we previously
+observed.</p>
+
+<pre>
+    # java BigDecimalPoC
+    Exception in thread "main" java.lang.ArithmeticException: BigInteger would overflow supported range
+      at java.base/java.math.BigInteger.reportOverflow(BigInteger.java:1154)
+      at java.base/java.math.BigInteger.checkRange(BigInteger.java:1149)
+      at java.base/java.math.BigInteger.<init>(BigInteger.java:1124)
+      at java.base/java.math.BigInteger.shiftLeft(BigInteger.java:3217)
+      at java.base/java.math.BigInteger.multiplyToomCook3(BigInteger.java:1833)
+      at java.base/java.math.BigInteger.multiply(BigInteger.java:1586)
+      at java.base/java.math.BigInteger.pow(BigInteger.java:2396)
+      at java.base/java.math.BigDecimal.bigTenToThe(BigDecimal.java:3897)
+      at java.base/java.math.BigDecimal.bigMultiplyPowerTen(BigDecimal.java:4855)
+      at java.base/java.math.BigDecimal.add(BigDecimal.java:4790)
+      at java.base/java.math.BigDecimal.add(BigDecimal.java:1313)
+      at POC.main(POC.java:7)
+</pre>
+
+<h3>IBM J9</h3>
+
+<p>IBM&#39;s implementation of the JVM appears the most vulnerable to this issue, as
+our proof of concept program ran for over 4 months before the OS killed the
+process.</p>
+
+<pre>
+    # java version "1.8.0_161"
+    Java(TM) SE Runtime Environment (build 8.0.5.10 - pxa6480sr5fp10-20180214_01(SR5 FP10))
+    IBM J9 VM (build 2.9, JRE 1.8.0 Linux amd64-64 Compressed References 20180208_378436 (JIT enabled, AOT enabled)
+    OpenJ9   - 39bb844
+    OMR      - c04ccb2
+    IBM      - 2321a81)
+    JCL - 20180209_01 based on Oracle jdk8u161-b12
+
+    # time ./ibm-java-x86_64-80/bin/java -Xms8g -Xmx8g BigDecimalPoC
+    Killed
+    real    247735m36.627s
+    user    247542m0.716s
+    sys     627m18.404s
+</pre>
+
+<h3>Android ART 8.0</h3>
+
+<p>
+We embedded our PoC into an Android App in order to evaluate the extent
+to which Android's implementation of <span class="code">BigDecimal.add</span> is vulnerable to
+the performance issue we observed in other JVMs. In this app, a button triggers
+the execution of the PoC and we observed the task crash after running for 13
+minutes. This experiment was performed on an x86 Android emulator running
+Android ART 8.0.</p>
+
+<pre>
+    04-05 00:48:17.363 13012-13036/com.muchtype.wdblair.bigdecimalpoc V/MEASUREMENTS: starting for 1e2147483647
+    04-05 01:01:45.552 13012-13036/com.muchtype.wdblair.bigdecimalpoc E/AndroidRuntime: FATAL EXCEPTION: AsyncTask #1
+    Process: com.muchtype.wdblair.bigdecimalpoc, PID: 13012
+      java.lang.RuntimeException: An error occurred while executing doInBackground()
+      at android.os.AsyncTask$3.done(AsyncTask.java:353)
+      at java.util.concurrent.FutureTask.finishCompletion(FutureTask.java:383)
+      at java.util.concurrent.FutureTask.setException(FutureTask.java:252)
+      at java.util.concurrent.FutureTask.run(FutureTask.java:271)
+      at android.os.AsyncTask$SerialExecutor$1.run(AsyncTask.java:245)
+      at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+      at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+      at java.lang.Thread.run(Thread.java:764)
+      Caused by: java.lang.ArithmeticException: error:03000066:bignum routines:OPENSSL_internal:BIGNUM_TOO_LONG
+      at java.math.NativeBN.BN_exp(Native Method)
+      at java.math.BigInt.bigExp(BigInt.java:282)
+      at java.math.BigInt.exp(BigInt.java:290)
+      at java.math.BigInteger.pow(BigInteger.java:907)
+      at java.math.Multiplication.powerOf10(Multiplication.java:135)
+      at java.math.Multiplication.multiplyByTenPow(Multiplication.java:108)
+      at java.math.BigDecimal.addAndMult10(BigDecimal.java:767)
+      at java.math.BigDecimal.add(BigDecimal.java:758)
+      at com.muchtype.wdblair.bigdecimalpoc.BigDecimalPoc.doInBackground(BigDecimalPoc.java:28)
+      at com.muchtype.wdblair.bigdecimalpoc.BigDecimalPoc.doInBackground(BigDecimalPoc.java:14)
+      at android.os.AsyncTask$2.call(AsyncTask.java:333)
+      at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+      at android.os.AsyncTask$SerialExecutor$1.run(AsyncTask.java:245)
+      at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+      at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+      at java.lang.Thread.run(Thread.java:764)
+</pre>
+
+<p>The underlying error thrown by Android's runtime appears similar to the error message thrown by OpenJDK, but it's interesting to see the exception come from the <span class="code">OPENSSL</span> module. Furthermore, we observed the runtime of the PoC vary in strange ways in the Android environment as we varied the value of the exponent given in the PoC. We would expect the runtime of the app to scale linearly as the value of the exponent used in the PoC scales grows. As the following graph shows, the runtime appears to peak, and then drop off after a certain point. Intuitively, this could represent the cut off for when the value of the <span class="code">BigInteger</span> exceeds a threshold, and the library responds by terminating the computation with an exception. As we note in our paper, Google did not consider this a security issue for the Android platform.</p>
+
+<img class="figure" src="/static/android.svg" />
+
+<h2>Space and Time Analysis for Cybersecurity</h2>
+<p>HotFuzz was developed over the course of the DARPA Space and Time Analysis for Cybersecurity (STAC) program. In our paper, we evaluated Hotfuzz over all the STAC challenges using a single configuration, but over the course of the program we frequently micro-fuzzed individual methods contained in the challenges. One feature not discussed in our paper is HotFuzz&#39;s ability to micro-fuzz a method for AC vulnerabilities with respect to space with memory measurements provided by the EyeVM. In the following graph, you can see how HotFuzz demonstrates the presence of an AC vulnerability in space by causing the method under test to consume memory until it exceeds the time threshold and HotFuzz kills the process. The test case in the upper right hand corner in the graph demonstrates the presence of an AC vulnerability in space.</p>
+
+<img class="figure" src="/static/suspicion_2.svg" />
+
+<h2>Conclusion</h2>
+<p>
+In this work, we propose micro-fuzzing as a technique for automatically
+constructing test harnesses around arbitrary methods and sanitizing their
+execution for AC vulnerabilities. We proposed new seed selection strategies and
+evaluated their performance, measured by the number of bugs they detected, over
+production software and on challenges constained in the STAC program. We
+observed that micro-fuzzing detects real bugs in practice, and that our
+proposed seed selection strategy (SRI) outperformed the baseline strategy
+(IVI). We presented several case studies and disclosed our findings to
+vendors, who confirmed our results. The complete description of our system and
+results can be found in our <a href="/papers/hotfuzz.pdf">paper</a> <a href="/papers/hotfuzz.bib">[bib]</a>.
+</p>
+
+</article>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-158080591-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-158080591-1');
+</script>
+</body>
+</html>
