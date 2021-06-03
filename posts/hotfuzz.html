@@ -35,6 +35,7 @@
 <article>
 <a href="/papers/hotfuzz.pdf">[paper]</a>
 <a href="/static/HotFuzz.pptx">[slides]</a>
+<a href="/papers/hotfuzz.bib">[bib]</a>
 
 <h2>Overview</h2>
 <p>In this post, we introduce HotFuzz, a system that implements micro-fuzzing
@@ -204,7 +205,7 @@ observed.</p>
 
 <p>IBM&#39;s implementation of the JVM appears the most vulnerable to this issue, as
 our proof of concept program ran for over 4 months before the OS killed the
-process.</p>
+process. After disclosing the vulnerability, IBM issued a <a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1517">CVE</a> for the bug.</p>
 
 <pre>
     # java version "1.8.0_161"
