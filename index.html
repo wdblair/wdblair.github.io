@@ -2,36 +2,30 @@
 <head>
     <title>William Blair, Boston University Computer Science</title>
     <link rel="stylesheet" href="/static/stylesheet.css" type="text/css" charset="utf-8" />
-
-    <style type="text/css">
-        body {
-            font-family: 'libertinus_serifregular';
-        }
-    </style>
 </head>
 
 <body>
-<div style="float: right"> <img src="id.jpg" height="0"></div>
+<div style="float: right"> <img src="/static/portrait.png" height="150px"></div>
 <font size="5"><b>
 William Blair</b></font><br>
 PhD Candidate <a href="/cv.pdf">[cv]</a><br>
-Computer Science (<a href="https://seclab.bu.edu/">Software Security</a>, <a href="http://www.bu.edu/cs/research/popv/">POPV</a>)<br>
+Computer Science (<a href="https://seclab.bu.edu/">SeclaBU</a>, <a href="http://www.bu.edu/cs/research/popv/">POPV</a>)<br>
 Boston University<br>
 Email: wdblair at bu dot edu<br>
+<a target="_blank" href="https://scholar.google.com/citations?user=Xu1AyRUAAAAJ&hl=en">Google Scholar</a>
 <hr width="200" align="LEFT">
 <p>
 
 Research
 <ul class="statement">
 <li>
-I am a PhD candidate studying Computer Science at Boston University under the
-supervision of Manuel Egele and Hongwei Xi.
-<br>
-I am interested in developing program analysis techniques that discover unknown
-vulnerabilities hiding in programs and exploring language based security
-approaches that defend such programs from attacks. I am also interested in
-how advanced type systems can help improve the reliability and security of
-systems software.
+<p>I am a PhD candidate studying Computer Science at Boston University under the supervision of Manuel Egele and Hongwei Xi.</p>
+
+<p>Recently, I have been researching language based security techniques to protect cloud services. I had the opportunity to investigate this cloud security topic while interning with the Cognitive Security Intelligence (CSI) team at IBM Research where I participated in the DARPA Cyber Hunting at Scale (CHASE) program. I also work on defenses that use memory protection keys (MPKs) available on recent Intel CPUs to improve applications' memory safety. This architectural security work was done as a part of the NSF Secure and Trustworthy Cyberspace (SaTC) Taming Memory Corruption with Security Monitors program.</p>
+
+<p>Previously, I worked on a novel fuzz testing technique called <a href="https://dl.acm.org/doi/10.1145/3532184" target="_blank">micro-fuzzing</a> to detect algorithmic complexity (AC) vulnerabilities in Java programs and libraries. This was done in collaboration with researchers from Boston University, Northeastern University, and UC Santa Barbara under the DARPA Space and Time Analysis for Cybersecurity (STAC) program. In addition to being used on challenges designed by defense contractors throughout the STAC program, our micro-fuzzing prototype, <a href="https://dl.acm.org/doi/10.1145/3532184" target="_blank">HotFuzz</a>, has discovered AC bugs in widely used production libraries.</p>
+
+<p>I am also interested in how advanced type systems can be used to improve the reliability and security of systems software. To test this idea, I periodically work on <a href="https://www.ats-flight.org"/>ATSFlight</a>, a firmware for first person view (FPV) drones implemented in ATS, a statically typed functional programming language that features both dependent and linear types.</p>
 </li>
 </ul>
 
@@ -47,15 +41,8 @@ Boston University 2012
 </li>
 </ul>
 
-Software
-<ul>
-<li><b>ATSFlight</b> <a href="https://www.ats-flight.org">[project]</a><br>
-A firmware for first-person-view (FPV) racing drones implemented in ATS.</li>
-</ul>
-
 Papers
 <ul>
-<p>
 <li><b>MPKAlloc: Efficient Heap Meta-Data Integrity Through Hardware Memory Protection Keys</b><a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-031-09484-2_8">[pdf]</a><a target="_blank" href="/static/mpkalloc.pptx">[slides]</a><a target="_blank" href="https://www.github.com/buseclab/mpkalloc">[code]</a><a href="/papers/mpkalloc.bib">[cite]</a><br>
 <b>William Blair</b>, William Robertson, Manuel Egele.<br>
 In Proceedings of the Conference on Detection of Intrusions and Malware & Vulnerability Assessment (DIMVA) 2022</i>
@@ -78,6 +65,18 @@ In Post-Proceedings of the <i>ACM Workshop on ML 2015</i>
 </li>
 </ul>
 
+Patents
+<ul>
+<li><b>Stateful Microservice-Aware Intrusion Detection</b><a href="https://patents.google.com/patent/US20220309152A1/en" target="_blank">[doc]</a><br>
+Frederico Araujo, <b>William Blair</b>, Teryl Paul Taylor.<br>
+US Patent Application US17/216,215 2022
+</li>
+<li><b>Intrusion Detection in Micro-Services through Container Telemetry and Behavior Modeling</b><a href="https://patents.google.com/patent/US20220121741A1/en" target="_blank">[doc]</a><br>
+Frederico Araujo, Teryl Paul Taylor, Jiyong Jang, <b>William Blair</b>.<br>
+US Patent Application US17/071,055 2022
+</li>
+</ul>
+
 Talks
 <ul>
 <li><b>Symbolic Modeling of Micro Services for Intrusion Detection</b>
@@ -93,7 +92,8 @@ Talks
 <li><b>Using a Portfolio of SMT Solvers in Software Development</b>
 <br>New England Programming Languages Symposium (NEPLS), Tufts University, November 2015.</li>
 <li><b>Dependent Types for Real-Time Constraints</b> <a href="https://www.youtube.com/watch?v=nBaRKI5q-DI&feature=youtu.be">[talk]</a>
-<br>ACM SIGPLAN ML Family Workshop at The International Conference on Functional Programming (ICFP), Vancouver, Canada, September 2015.</li>
+<br>ACM SIGPLAN ML Family Workshop at The International Conference on Functional Programming (ICFP)<br>
+Vancouver, Canada, September 2015.</li>
 <li><b>Integrating SMT into Software Development</b>
 <br>New England Programming Languages Symposium (NEPLS), Wesleyan University, June 2015.</li>
 <li><b>Debugging with Types in ATS</b><a style="margin-left: 0.2em" href="https://www.youtube.com/watch?v=yFXzuCFeRGM&feature=youtu.be&t=31m30s">[talk]</a>
@@ -112,13 +112,7 @@ I have served as a T.F. for the following courses.
   <li>CS211: iOS Application Development (Spring 2014)</li>
 </ul>
 
-Funding
-<ul>
-  <li>DARPA Space and Time Analysis for Cybersecurity (STAC)</li>
-</ul>
-
 Misc
-
 <ul>
   <li>Expander Graphs <a href="/static/expanders.pdf">[notes]</a></li>
   <li>Quicksort <a href="/static/quicksort_anim.html">[animation]</a><a href="/static/quicksort_anim.dats">[code]</a></li>
