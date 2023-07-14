@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>William Blair, Boston University Computer Science</title>
+    <title>William Blair, Oracle Labs</title>
     <link rel="stylesheet" href="/static/stylesheet.css" type="text/css" charset="utf-8" />
 </head>
 
@@ -8,10 +8,9 @@
 <div style="float: right"> <img src="/static/portrait.png" height="150px"></div>
 <font size="5"><b>
 William Blair</b></font><br>
-PhD Candidate <a href="/cv.pdf">[cv]</a><br>
-Computer Science (<a href="https://seclab.bu.edu/">SeclaBU</a>, <a href="http://www.bu.edu/cs/research/popv/">POPV</a>)<br>
-Boston University<br>
-Email: wdblair at bu dot edu<br>
+Senior Member of Technical Staff <a href="/cv.pdf">[cv]</a><br>
+GraalVM<br>
+Oracle Labs<br>
 <a target="_blank" href="https://scholar.google.com/citations?user=Xu1AyRUAAAAJ&hl=en">Google Scholar</a>
 <hr width="200" align="LEFT">
 <p>
@@ -19,18 +18,30 @@ Email: wdblair at bu dot edu<br>
 Research
 <ul class="statement">
 <li>
-<p>I am a PhD candidate studying Computer Science at Boston University under the supervision of Manuel Egele and Hongwei Xi.</p>
+    <p>I work on security topics within the GraalVM at <a href="https://labs.oracle.com/" target="_blank">Oracle Labs</a>. The <a href="https://labs.oracle.com/pls/apex/f?p=94065:12:12102691455834:47" target="_blank">GraalVM</a> is an ambitious project that provides efficient just-in-time (JIT) and native compilation for Java programs and also a framework for implementing programming languages on top of the Java Virtual Machine (JVM).</p>
+</li>
 
-<p>Recently, I have been researching language based security techniques to protect cloud services. I had the opportunity to investigate this cloud security topic while interning with the Cyber Security Intelligence (CSI) team at IBM Research where I participated in the DARPA Cyber-Hunting at Scale (CHASE) program. I also work on defenses that use memory protection keys (MPKs) available on recent Intel CPUs to improve applications' memory safety. This architectural security work was done as a part of the NSF Secure and Trustworthy Cyberspace (SaTC) Taming Memory Corruption with Security Monitors program.</p>
+<li>
+    <p>I completed my PhD in Computer Science at Boston University where I was supervised by <a href="https://megele.io" target="_blank">Manuel Egele</a> and <a href="https://hwxi.github.io/">Hongwei Xi</a>. At BU, I was a member of the <a href="https://seclab.bu.edu" target="_blank">Secure Systems Lab</a> and <a href="https://www.bu.edu/cs/research/popv/" target="_blank">Principles of Programming and Verification (POPV)</a> research group.</p>
+</li>
 
-<p>Previously, I worked on a novel fuzz testing technique called <a href="https://dl.acm.org/doi/10.1145/3532184" target="_blank">micro-fuzzing</a> to detect algorithmic complexity (AC) vulnerabilities in Java programs and libraries. This was done in collaboration with researchers from Boston University, Northeastern University, and UC Santa Barbara under the DARPA Space and Time Analysis for Cybersecurity (STAC) program. In addition to being used on challenges designed by defense contractors throughout the STAC program, our micro-fuzzing prototype, <a href="https://dl.acm.org/doi/10.1145/3532184" target="_blank">HotFuzz</a>, has discovered AC bugs in widely used production libraries.</p>
+    <p>During my PhD, I researched language based security techniques to protect cloud services. I had the opportunity to investigate this cloud security topic while interning with the <a href="https://researcher.watson.ibm.com/researcher/view_group.php?id=4354">Cyber Security Intelligence (CSI)</a> team at IBM Research where I participated in the <a href="https://www.darpa.mil/program/cyber-hunting-at-scale" target="_blank">DARPA Cyber-Hunting at Scale (CHASE)</a> program. I also worked on defenses that use memory protection keys (MPKs) available on recent Intel CPUs to improve applications' memory safety. This architectural security work was done as a part of the NSF <a href="https://new.nsf.gov/funding/opportunities/secure-trustworthy-cyberspace-satc">Secure and Trustworthy Cyberspace (SaTC)</a> <a href="https://www.warren.senate.gov/newsroom/press-releases/lawmakers-applaud-over-17-million-in-national-science-foundation-grants-to-massachusetts-research-institutions">Taming Memory Corruption with Security Monitors</a> program.</p>
 
-<p>I am also interested in how advanced type systems can be used to improve the reliability and security of systems software. To test this idea, I periodically work on <a href="https://www.ats-flight.org"/>ATSFlight</a>, a firmware for first person view (FPV) drones implemented in ATS, a statically typed functional programming language that features both dependent and linear types.</p>
+    <p>I also worked on a novel fuzz testing technique called <a href="https://dl.acm.org/doi/10.1145/3532184" target="_blank">micro-fuzzing</a> to detect algorithmic complexity (AC) vulnerabilities in Java programs and libraries. This was done in collaboration with researchers from Boston University, Northeastern University, and UC Santa Barbara under the <a href="https://www.darpa.mil/program/space-time-analysis-for-cybersecurity" target="_blank">DARPA Space and Time Analysis for Cybersecurity (STAC)</a> program. In addition to being used on challenges designed by defense contractors throughout the STAC program, our micro-fuzzing prototype, <a href="https://dl.acm.org/doi/10.1145/3532184" target="_blank">HotFuzz</a>, has discovered AC bugs in widely used production Java libraries.</p>
+
+</li>
+
+<li>
+    <p>I am also interested in how advanced type systems can be used to improve the reliability and security of systems software. To test this idea, I periodically work on <a href="https://www.ats-flight.org" target="_blank"/>ATSFlight</a>, a firmware for first person view (FPV) drones implemented in ATS, a statically typed functional programming language that features both dependent and linear types. This work grew out of my experience using ATS on embedded microcontrollers during grad school, and was influenced by the <a href="https://www.cs.cmu.edu/~fox/" target="_blank">Fox Project</a>.</p>
 </li>
 </ul>
 
 Education
 <ul>
+<li>
+PhD in Computer Science<br>
+Boston University 2023
+</li>
 <li>
 MS in Computer Science<br>
 Boston University 2014
@@ -43,6 +54,10 @@ Boston University 2012
 
 Papers
 <ul>
+<li><b>ThreadLock: Native Principal Isolation Through Memory Protection Keys</b> <a target="_blank" href="https://dl.acm.org/doi/abs/10.1145/3579856.3595797">[article]</a><a target="_blank" href="https://dl.acm.org/doi/pdf/10.1145/3579856.3595797">[pdf]</a><a href="/papers/threadlock.bib">[cite]</a><br>
+<b>William Blair</b>, William Robertson, Manuel Egele.<br>
+In Proceedings of the ACM ASIA Conference on Computer and Communications Security (ASIACCS) 2023</i>
+</li>
 <li><b>MPKAlloc: Efficient Heap Meta-Data Integrity Through Hardware Memory Protection Keys</b> <a target="_blank" href="https://link.springer.com/chapter/10.1007/978-3-031-09484-2_8">[article]</a><a target="_blank" href="https://seclab.bu.edu/papers/mpkalloc-dimva22.pdf">[pdf]</a><a target="_blank" href="/static/mpkalloc.pptx">[slides]</a><a target="_blank" href="https://www.github.com/buseclab/mpkalloc">[code]</a><a href="/papers/mpkalloc.bib">[cite]</a><br>
 <b>William Blair</b>, William Robertson, Manuel Egele.<br>
 In Proceedings of the Conference on Detection of Intrusions and Malware & Vulnerability Assessment (DIMVA) 2022</i>
@@ -67,11 +82,17 @@ In Post-Proceedings of the <i>ACM Workshop on ML 2015</i>
 
 Patents
 <ul>
-<li><b>Stateful Microservice-Aware Intrusion Detection</b><a href="https://patents.google.com/patent/US20220309152A1/en" target="_blank">[doc]</a><br>
+<li><b>Guided Micro-Fuzzing Through Hybrid Program Analysis</b> <a href="https://patents.google.com/patent/US20230044951A1/en" target="_blank">[doc]</a><br>
+Frederico Araujo, <b>William Blair</b>, Sanjeev Das, Jiyong Jang.<br>
+US Patent Application US17/444,497 2023
+<li><b>Automated Synthesis of Reference Policies for Runtime Microservice Protection</b> <a href="https://patents.google.com/patent/US20230052827A1/en" target="_blank">[doc]</a><br>
+Frederico Araujo, <b>William Blair</b>,Teryl Paul Taylor.<br>
+US Patent Application US17/390,881 2023
+<li><b>Stateful Microservice-Aware Intrusion Detection</b> <a href="https://patents.google.com/patent/US20220309152A1/en" target="_blank">[doc]</a><br>
 Frederico Araujo, <b>William Blair</b>, Teryl Paul Taylor.<br>
 US Patent Application US17/216,215 2022
 </li>
-<li><b>Intrusion Detection in Micro-Services through Container Telemetry and Behavior Modeling</b><a href="https://patents.google.com/patent/US20220121741A1/en" target="_blank">[doc]</a><br>
+<li><b>Intrusion Detection in Micro-Services Through Container Telemetry and Behavior Modeling</b> <a href="https://patents.google.com/patent/US20220121741A1/en" target="_blank">[doc]</a><br>
 Frederico Araujo, Teryl Paul Taylor, Jiyong Jang, <b>William Blair</b>.<br>
 US Patent Application US17/071,055 2022
 </li>
